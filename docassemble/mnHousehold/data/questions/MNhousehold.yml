@@ -1,0 +1,50 @@
+metadata:
+ title: Assignment 2 
+ description: user, DAList, generic object modifier, yesno, select one, select multiple
+ example start: 6
+ example end: 
+#username
+#generic object modifier, single question household names, DAList
+#yesno modifier
+#multiple choice fields - select one, select all
+#signature field??
+---
+modules:
+ - docassemble.base.core
+ - docassemble.base.util
+---
+objects:
+ - household_members: DAList.using(object_type=Individual, there_are_any=True)
+---
+question: |
+ Hello! Please enter your name.
+fields:
+ - First Name: household_members[0].name.first
+ - Last Name: household_members[0].name.last
+---
+question: |
+ ${household_members[0].name.first}, do you live alone?
+noyes: household_members.there_is_another
+---
+question: |
+ Please enter the name of the ${ordinal(i)} household member - 
+fields:
+ - First Name: household_members[i].name.first
+ - Last Name: household_members[i].name.last
+---
+subquestion: |
+ To name another household member, click 'Add'.
+question: |
+ If there are no other members of your household to identify, click 'Next'.
+field: household_members.there_is_another
+buttons:
+- Add: True
+- Next: False
+---
+mandatory: True
+question: |
+ Your household is comprised of the following people:
+ ${household_members}
+buttons: 
+ - Exit: exit
+---
